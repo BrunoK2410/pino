@@ -1,30 +1,72 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <TheNavbar />
+  <!-- <div class="background-image"></div> -->
+  <div style="padding: 80px 0px"><router-view /></div>
+  <TheFooter />
 </template>
 
+<script setup>
+import TheNavbar from "./components/layouts/TheNavbar.vue";
+import TheFooter from "./components/layouts/TheFooter.vue";
+</script>
+
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+
+:root {
+  --red-color: #ec665d;
+  --light-pink-color: #f4a39e;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
+html,
+body {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  height: 100%;
+  background-color: var(--light-pink-color) !important;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+/* .background-image {
+  background-image: url("./assets/background-image.jpg");
+  background-repeat: no-repeat;
+  background-position: 45% -40%;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  opacity: 0.7;
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  position: fixed;
+  z-index: -1;
+} */
+
+body a {
+  color: unset;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+.bg-red {
+  background-color: var(--red-color) !important;
+}
+
+.bg-light-pink {
+  background-color: var(--light-pink-color) !important;
+}
+
+.navbar {
+  --bs-navbar-nav-link-padding-x: 1rem !important;
+}
+
+.card-title {
+  height: 90px;
+  max-height: 90px;
 }
 </style>
