@@ -16,12 +16,42 @@
       >
         <span class="navbar-toggler-icon"></span>
       </a>
-      <div class="navbar-nav d-none d-md-flex">
-        <router-link to="/home" class="nav-link">Početna</router-link>
-        <router-link to="/dogs" class="nav-link">Udomi psa!</router-link>
-        <router-link to="/cats" class="nav-link">Udomi mačku!</router-link>
-        <router-link to="/about" class="nav-link">O nama</router-link>
-        <router-link to="/contact" class="nav-link">Kontakt</router-link>
+      <div class="navbar-nav d-none d-md-flex align-items-center">
+        <router-link
+          to="/home"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/home' }"
+          >Početna</router-link
+        >
+        <router-link
+          to="/dogs"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/dogs' }"
+          >Udomi psa!</router-link
+        >
+        <router-link
+          to="/cats"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/cats' }"
+          >Udomi mačku!</router-link
+        ><router-link
+          to="/news"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/news' }"
+          >Novosti</router-link
+        >
+        <router-link
+          to="/about"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/about' }"
+          >O nama</router-link
+        >
+        <router-link
+          to="/contact"
+          class="nav-link text-center"
+          :class="{ active: route.path === '/contact' }"
+          >Kontakt</router-link
+        >
       </div>
     </div>
   </nav>
@@ -50,29 +80,54 @@
 
     <ul class="navbar-nav align-items-center">
       <li class="nav-item mb-3" data-bs-dismiss="offcanvas">
-        <router-link to="/home" class="nav-link py-2 px-4">Početna</router-link>
+        <router-link
+          to="/home"
+          class="nav-link py-2 px-4"
+          :class="{ active: route.path === '/home' }"
+          >Početna</router-link
+        >
       </li>
       <li class="nav-item mb-3" data-bs-dismiss="offcanvas">
-        <router-link to="/dogs" class="nav-link py-2 px-4"
+        <router-link
+          to="/dogs"
+          class="nav-link py-2 px-4"
+          :class="{ active: route.path === '/dogs' }"
           >Udomi psa!</router-link
         >
       </li>
       <li class="nav-item mb-3" data-bs-dismiss="offcanvas">
-        <router-link to="/cats" class="nav-link py-2 px-4"
+        <router-link
+          to="/cats"
+          class="nav-link py-2 px-4"
+          :class="{ active: route.path === '/cats' }"
           >Udomi mačku!</router-link
         >
       </li>
       <li class="nav-item mb-3" data-bs-dismiss="offcanvas">
-        <router-link to="/about" class="nav-link py-2 px-4">O nama</router-link>
+        <router-link
+          to="/about"
+          class="nav-link py-2 px-4"
+          :class="{ active: route.path === '/about' }"
+          >O nama</router-link
+        >
       </li>
       <li class="nav-item mb-3" data-bs-dismiss="offcanvas">
-        <router-link to="/contact" class="nav-link py-2 px-4"
+        <router-link
+          to="/contact"
+          class="nav-link py-2 px-4"
+          :class="{ active: route.path === '/contact' }"
           >Kontakt</router-link
         >
       </li>
     </ul>
   </div>
 </template>
+
+<script setup>
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+</script>
 
 <style scoped>
 .navbar {
