@@ -1,13 +1,16 @@
 <template>
   <TheNavbar />
   <!-- <div class="background-image"></div> -->
-  <div style="padding: 80px 0px"><router-view /></div>
+  <div style="padding: 80px 0px"><router-view :key="route.path" /></div>
   <TheFooter />
 </template>
 
 <script setup>
 import TheNavbar from "./components/layouts/TheNavbar.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 </script>
 
 <style>
@@ -18,11 +21,22 @@ import TheFooter from "./components/layouts/TheFooter.vue";
   --light-pink-color: #f4a39e;
 }
 
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #app {
   font-family: "Playfair Display", serif;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 html,
