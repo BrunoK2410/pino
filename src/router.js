@@ -4,6 +4,7 @@ import AboutUsPage from "./pages/AboutUsPage.vue";
 import ContactPage from "./pages/ContactPage.vue";
 import ListPage from "./pages/ListPage.vue";
 import AnimalDetailsPage from "./pages/AnimalDetailsPage.vue";
+import ArticleDetailsPage from "./pages/ArticleDetailsPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
@@ -31,7 +32,6 @@ const routes = [
     path: "/dogs/:slug",
     name: "Dog details",
     component: AnimalDetailsPage,
-    props: true,
   },
   {
     path: "/cats",
@@ -42,14 +42,25 @@ const routes = [
     path: "/cats/:slug",
     name: "Cat details",
     component: AnimalDetailsPage,
-    props: true,
   },
   { path: "/news", name: "News", component: ListPage },
+  {
+    path: "/news/:slug",
+    name: "Article details",
+    component: ArticleDetailsPage,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
 });
 
 export default router;
