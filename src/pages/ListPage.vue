@@ -60,24 +60,29 @@
     </div>
   </div>
   <template v-else>
-    <animal-card
-      v-if="route.path !== '/news'"
-      :animals="filteredAnimals"
-      :animalType="route.path === '/dogs' ? 'dog' : 'cat'"
-    />
-    <news-card v-else :news="news" />
-    <the-pagination
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      @decrement="prev"
-      @increment="next"
-      @active-page="handleActivePage"
-    />
+    <div
+      style="min-height: 90vh"
+      class="position-relative d-flex flex-column justify-content-between"
+    >
+      <animal-card
+        class="mt-5"
+        v-if="route.path !== '/news'"
+        :animals="filteredAnimals"
+        :animalType="route.path === '/dogs' ? 'dog' : 'cat'"
+      />
+      <news-card v-else :news="filteredNews" /><the-pagination
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @decrement="prev"
+        @increment="next"
+        @active-page="handleActivePage"
+      />
+    </div>
   </template>
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref, computed, watch, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import apiRequests from "../services/apiRequests.js";
 import AnimalCard from "../components/shared/AnimalCard.vue";
@@ -85,6 +90,15 @@ import NewsCard from "../components/shared/NewsCard.vue";
 import ThePagination from "../components/shared/ThePagination.vue";
 
 const route = useRoute();
+
+watch(
+  () => route.fullPath,
+  (newPath, oldPath) => {
+    if (newPath !== oldPath) {
+      currentPage.value = 1;
+    }
+  }
+);
 
 const animals = ref([]);
 
@@ -99,6 +113,7 @@ const getAnimals = async () => {
     animals.value = await apiRequests.getAnimals(
       route.path === "/dogs" ? "dogs" : "cats"
     );
+
     totalItems.value = [...animals.value];
     adoptableAnimals.value = animals.value.filter((animal) => {
       return (
@@ -137,17 +152,26 @@ watch(totalPages, (newValue, oldValue) => {
 });
 
 const prev = () => {
+  scrollToTop();
   currentPage.value--;
 };
 
 const handleActivePage = (page) => {
+  scrollToTop();
   currentPage.value = page;
 };
 
 const next = () => {
+  scrollToTop();
   currentPage.value++;
 };
 
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "instant",
+  });
+};
 const filteredAnimals = computed(() => {
   let filtered = [...adoptableAnimals.value];
   if (route.query.category) {
@@ -161,26 +185,66 @@ const filteredAnimals = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
   changeLoadingState(false);
+
   return filtered.slice(startIndex, endIndex);
 });
 
-const changeLoadingState = (value) => {
-  isLoading.value = value;
+const filteredNews = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  changeLoadingState();
+  return news.value.slice(startIndex, endIndex);
+});
+
+const changeLoadingState = () => {
+  nextTick(() => {
+    const cards =
+      route.path !== "/news"
+        ? Array.from(document.querySelectorAll(".animal-card-container"))
+        : Array.from(document.querySelectorAll(".news-card"));
+
+    cards.forEach((element, index) => {
+      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+      observer.observe(element);
+    });
+  });
 };
 
 const getFilteredLength = (filtered) => {
   totalItems.value = [...filtered];
 };
+const isSmallViewport = window.innerWidth < 362;
 
-
-
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("scroll-animation");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "100px" }
+);
 onMounted(async () => {
   if (route.path !== "/news") {
     await getAnimals();
   } else {
     await getNews();
   }
+
   isLoading.value = false;
+  nextTick(() => {
+    const cards =
+      route.path !== "/news"
+        ? Array.from(document.querySelectorAll(".animal-card-container"))
+        : Array.from(document.querySelectorAll(".news-card"));
+
+    cards.forEach((element, index) => {
+      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+      observer.observe(element);
+    });
+  });
 });
 </script>
 

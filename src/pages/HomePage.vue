@@ -15,7 +15,7 @@
   <template v-else>
     <div
       id="carousel"
-      class="carousel carousel-dark slide"
+      class="carousel carousel-dark slide carousel-fade"
       data-bs-ride="carousel"
     >
       <div class="carousel-indicators">
@@ -51,27 +51,29 @@
           :class="index === 0 ? 'active' : ''"
           data-bs-interval="10000"
         >
-          <div
-            class="image-container position-relative mx-auto"
-            style="max-width: 800px"
-          >
-            <img
-              :src="article.images[0]"
-              class="d-block w-100"
-              alt="..."
-              style="max-width: 800px"
-            />
+          <router-link :to="articleSlug(article)">
             <div
-              class="carousel-caption start-0 end-0 bottom-0 w-100 d-none d-md-block"
-              style="
-                background-color: rgba(255, 255, 255, 0.7);
-                padding-bottom: 2.25rem;
-              "
+              class="image-container position-relative mx-auto"
+              style="max-width: 800px"
             >
-              <h5>{{ article.title }}</h5>
-              <p>{{ article.date }}</p>
-            </div>
-          </div>
+              <img
+                :src="article.images[0]"
+                class="d-block w-100"
+                alt="..."
+                style="max-width: 800px"
+              />
+              <div
+                class="carousel-caption start-0 end-0 bottom-0 w-100 d-none d-md-block"
+                style="
+                  background-color: rgba(255, 255, 255, 0.7);
+                  padding-bottom: 2.25rem;
+                "
+              >
+                <h5>{{ article.title }}</h5>
+                <p>{{ article.date }}</p>
+              </div>
+            </div></router-link
+          >
         </div>
       </div>
       <button
@@ -391,8 +393,8 @@ const getAnimals = async () => {
       apiRequests.getAnimals("cats", 6),
     ]);
 
-    dogs.value = Object.values(dogsResponse);
-    cats.value = Object.values(catsResponse);
+    dogs.value = dogsResponse;
+    cats.value = catsResponse;
   } catch (error) {
     console.error(error);
   }
@@ -406,6 +408,12 @@ const getNews = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const articleSlug = (article) => {
+  return `/news/${article.title.toLowerCase().replace(/[?]/g, "").replace(/\s+/g, "-")}${
+    article.id
+  }`;
 };
 
 const isSmallViewport = window.innerWidth < 362;
@@ -425,9 +433,13 @@ const observer = new IntersectionObserver(
 onMounted(async () => {
   Promise.all([await getAnimals(), await getNews()]);
   isLoading.value = false;
-  nextTick(() => {
-    const itemsToAnimate = document.querySelectorAll(".animal-card-container");
+nextTick(() => {
+      const animalCards = Array.from(
+      document.querySelectorAll(".animal-card-container")
+    );
+    const newsCards = Array.from(document.querySelectorAll(".news-card"));
 
+    const itemsToAnimate = [...animalCards, ...newsCards];
     itemsToAnimate.forEach((element, index) => {
       element.style.transitionDelay = `${0.2 * index * 0.3}s`;
       observer.observe(element);

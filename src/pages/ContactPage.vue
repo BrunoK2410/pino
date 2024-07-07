@@ -20,7 +20,7 @@
             <h5 class="card-title d-flex flex-column mt-3 mb-5 my-md-3">
               <span
                 >Ukoliko nas želite kontaktirati, pošaljite nam e-mail na adresu
-                info@dumovec.hr ili ispunite ovaj obrazac:</span
+                info@pino.hr ili ispunite ovaj obrazac:</span
               >
             </h5>
             <div
@@ -44,7 +44,7 @@
                 </h5>
                 <hr />
                 <h5 class="email position-relative m-0 ps-5">
-                  info@noina-arka.hr
+                  info@pino.hr
                 </h5>
                 <hr />
                 <div

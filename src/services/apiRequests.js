@@ -1,8 +1,8 @@
 class ApiRequests {
   getAnimals(type, amount) {
     const url = amount
-      ? `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?orderBy="$key"&limitToFirst=${amount}`
-      : `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?`;
+      ? `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?orderBy="category_query"&equalTo="for-adoption"&limitToLast=${amount}`
+      : `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json`;
     return fetch(url, {
       method: "GET",
     })
@@ -13,13 +13,16 @@ class ApiRequests {
         return response.json();
       })
       .then((data) => {
-        // Transform data to include keys
-        console.log(data);
         const result = [];
         for (const key in data) {
           result.push({ id: key, ...data[key] });
         }
-        return result;
+
+        return result.sort((a, b) => {
+          const dateA = new Date(a.timestamp);
+          const dateB = new Date(b.timestamp);
+          return dateB - dateA;
+        });
       });
   }
 
@@ -38,10 +41,11 @@ class ApiRequests {
           throw new Error(`No data found for id: ${id}`);
         }
 
-        // Recursive function to fetch next animal
-        const fetchNextAnimal = (startId) => {
+        const categoryQuery = currentAnimal.category_query;
+
+        const fetchPrevAndNextAnimal = () => {
           return fetch(
-            `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?orderBy="$key"&startAt="${startId}"&limitToFirst=35`
+            `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?orderBy="category_query"&equalTo="${categoryQuery}"`
           )
             .then((response) => {
               if (!response.ok) {
@@ -50,72 +54,39 @@ class ApiRequests {
               return response.json();
             })
             .then((data) => {
-              const keys = Object.keys(data).filter((key) => key !== startId);
-              for (let key of keys) {
-                if (
-                  (currentAnimal.category[0] === "in-memoriam" ||
-                    currentAnimal.category[0] === "adopted") &&
-                  data[key].category[0] === currentAnimal.category[0]
-                ) {
-                  return { id: key, ...data[key] };
-                } else if (
-                  currentAnimal.category[0] !== "in-memoriam" &&
-                  currentAnimal.category[0] !== "adopted" &&
-                  data[key].category[0] !== "in-memoriam" &&
-                  data[key].category[0] !== "adopted"
-                ) {
-                  return { id: key, ...data[key] };
-                }
-              }
-              return keys.length > 0
-                ? fetchNextAnimal(keys[keys.length - 1])
-                : null;
-            })
-            .catch(() => null);
+              const result = Object.keys(data)
+                .map((key) => ({
+                  id: key,
+                  ...data[key],
+                }))
+                .sort((a, b) => {
+                  const dateA = new Date(a.timestamp);
+                  const dateB = new Date(b.timestamp);
+                  return dateB - dateA;
+                });
+
+              const currentIndex = result.findIndex((item) => item.id === id);
+
+              const prev = currentIndex > 0 ? result[currentIndex - 1] : null;
+              const next =
+                currentIndex < result.length - 1
+                  ? result[currentIndex + 1]
+                  : null;
+
+              return {
+                prev: prev,
+                next: next,
+              };
+            });
         };
 
-        const fetchPrevAnimal = (endId) => {
-          return fetch(
-            `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}.json?orderBy="$key"&endAt="${endId}"&limitToLast=35`
-          )
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(response.statusText);
-              }
-              return response.json();
-            })
-            .then((data) => {
-              const keys = Object.keys(data).filter((key) => key !== endId);
-              for (let key of keys.reverse()) {
-                if (
-                  (currentAnimal.category[0] === "in-memoriam" ||
-                    currentAnimal.category[0] === "adopted") &&
-                  data[key].category[0] === currentAnimal.category[0]
-                ) {
-                  return { id: key, ...data[key] };
-                } else if (
-                  currentAnimal.category[0] !== "in-memoriam" &&
-                  currentAnimal.category[0] !== "adopted" &&
-                  data[key].category[0] !== "in-memoriam" &&
-                  data[key].category[0] !== "adopted"
-                ) {
-                  return { id: key, ...data[key] };
-                }
-              }
-              return keys.length > 0 ? fetchPrevAnimal(keys[0]) : null;
-            })
-            .catch(() => null);
-        };
-
-        return Promise.all([fetchNextAnimal(id), fetchPrevAnimal(id)]).then(
-          ([next, prev]) => {
-            return {
-              currentAnimal: { id, ...currentAnimal },
-              prev: prev ? prev : null,
-              next: next ? next : null,
-            };
-          }
-        );
+        return fetchPrevAndNextAnimal().then(({ prev, next }) => {
+          return {
+            currentAnimal: { id, ...currentAnimal },
+            prev,
+            next,
+          };
+        });
       })
       .catch((error) => {
         throw new Error(
@@ -124,8 +95,10 @@ class ApiRequests {
       });
   }
 
-  getAnimalById(type, id) {
-    const url = `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/${type}/${id}.json`;
+  getNews(amount) {
+    const url = amount
+      ? `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json?orderBy="$key"&limitToFirst=${amount}`
+      : `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json`;
     return fetch(url, {
       method: "GET",
     })
@@ -136,26 +109,79 @@ class ApiRequests {
         return response.json();
       })
       .then((data) => {
-        if (data) {
-          return { id: id, ...data };
-        } else {
-          throw new Error(`No data found for id: ${id}`);
+        const result = [];
+        for (const key in data) {
+          result.push({ id: key, ...data[key] });
         }
+
+        return result.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB - dateA;
+        });
       });
   }
 
-  getNews(amount) {
-    const url = amount
-      ? `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json?orderBy="$key"&limitToFirst=${amount}`
-      : `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json`;
-    return fetch(url, {
-      method: "GET",
-    }).then((response) => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return response.json();
-    });
+  getNewsById(id) {
+    const url = `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news/${id}.json`;
+
+    return fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then((currentArticle) => {
+        const fetchPrevArticle = fetch(
+          `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json?orderBy="$key"&endAt="${id}"&limitToLast=2`
+        ).then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        });
+
+        const fetchNextArticle = fetch(
+          `https://pino-nmpb-default-rtdb.europe-west1.firebasedatabase.app/news.json?orderBy="$key"&startAt="${id}"&limitToFirst=2`
+        ).then((response) => {
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        });
+
+        return Promise.all([fetchPrevArticle, fetchNextArticle]).then(
+          ([prevArticles, nextArticles]) => {
+            const prevArticleIds = prevArticles
+              ? Object.keys(prevArticles)
+              : [];
+            const nextArticleIds = nextArticles
+              ? Object.keys(nextArticles)
+              : [];
+
+            const prev =
+              prevArticleIds.length > 1
+                ? { id: prevArticleIds[0], ...prevArticles[prevArticleIds[0]] }
+                : prevArticleIds.length === 1 && prevArticleIds[0] !== id
+                ? { id: prevArticleIds[0], ...prevArticles[prevArticleIds[0]] }
+                : null;
+
+            const next =
+              nextArticleIds.length > 1
+                ? { id: nextArticleIds[1], ...nextArticles[nextArticleIds[1]] }
+                : nextArticleIds.length === 1 && nextArticleIds[0] !== id
+                ? { id: nextArticleIds[0], ...nextArticles[nextArticleIds[0]] }
+                : null;
+
+            return {
+              currentArticle,
+              prev,
+              next,
+            };
+          }
+        );
+      });
   }
   addNew(type, data) {
     return fetch(

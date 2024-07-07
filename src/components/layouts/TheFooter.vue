@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="mt-auto">
     <nav
       class="bg-red d-flex justify-content-between align-items-center p-2 flex-column flex-lg-row"
     >

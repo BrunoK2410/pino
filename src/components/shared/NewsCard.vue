@@ -1,19 +1,19 @@
 <template>
-  <div
-    class="row mx-0 gap-5 mt-5"
-    :class="
-      route.path === '/news'
-        ? 'justify-content-center'
-        : 'justify-content-start'
-    "
-  >
+  <div class="row mx-0 gap-5 mt-5 justify-content-center">
     <div
       v-for="article in news"
-      :key="article.title"
-      class="card col-12 border-0 px-0"
+      :key="article.id"
+      class="news-card card col-12 border-0 px-0"
       style="max-width: 18rem"
+      :style="{
+        opacity: 0,
+        transform: 'translateY(100px)',
+        transition: 'all 0.7s ease',
+      }"
     >
-      <img :src="article.images[0]" class="card-img-top" alt="..." />
+      <router-link :to="articleSlug(article)">
+        <img :src="article.images[0]" class="card-img-top" alt="..."
+      /></router-link>
       <div
         class="card-body rounded-bottom d-flex flex-column justify-content-between bg-red"
       >
@@ -25,8 +25,8 @@
         </p>
         <div class="d-flex justify-content-between align-items-center">
           <span class="text-white">{{ article.date }}</span>
-          <a
-            href="#"
+          <router-link
+            :to="articleSlug(article)"
             class="circle-btn d-flex justify-content-center align-items-center bg-light-pink rounded-circle"
             style="
               width: 40px;
@@ -76,7 +76,7 @@
                   </g>
                 </g>
               </g></svg
-          ></a>
+          ></router-link>
         </div>
       </div>
     </div>
@@ -85,12 +85,16 @@
 
 <script setup>
 import { defineProps } from "vue";
-import { useRoute } from "vue-router";
 defineProps({
   news: Array,
 });
 
-const route = useRoute();
+const articleSlug = (article) => {
+  return `/news/${article.title
+    .toLowerCase()
+    .replace(/[?]/g, "")
+    .replace(/\s+/g, "-")}${article.id}`;
+};
 </script>
 
 <style scoped>
@@ -100,6 +104,11 @@ const route = useRoute();
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.scroll-animation {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
 }
 
 .circle-btn:hover {

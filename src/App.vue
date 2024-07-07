@@ -1,7 +1,8 @@
 <template>
   <TheNavbar />
-  <!-- <div class="background-image"></div> -->
-  <div style="padding: 80px 0px"><router-view :key="route.path" /></div>
+  <div style="padding: 80px 0px">
+    <router-view :key="route.path" />
+  </div>
   <TheFooter />
 </template>
 
@@ -46,20 +47,6 @@ body {
   height: 100%;
   background-color: var(--light-pink-color) !important;
 }
-
-/* .background-image {
-  background-image: url("./assets/background-image.jpg");
-  background-repeat: no-repeat;
-  background-position: 45% -40%;
-  background-size: cover;
-  height: 100vh;
-  width: 100%;
-  opacity: 0.7;
-  filter: blur(3px);
-  -webkit-filter: blur(3px);
-  position: fixed;
-  z-index: -1;
-} */
 
 body a {
   color: unset;

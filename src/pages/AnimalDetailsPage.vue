@@ -80,11 +80,15 @@
         >In memoriam</router-link
       >
     </div>
+
     <div class="d-flex justify-content-center align-items-center px-2 pt-5">
-      <div class="card mb-3" style="width: 800px">
+      <div class="card mb-3 border-0" style="width: 800px">
         <div
-          class="image-container d-flex justify-content-center align-items-center"
+          class="image-container d-flex justify-content-center align-items-center position-relative rounded-top"
         >
+          <div class="ribbon fs-5">
+            {{ animal.name }}
+          </div>
           <div
             id="animalImages"
             class="carousel slide bg-red"
@@ -240,7 +244,6 @@ const isDogsPath = computed(() => {
 
 onMounted(async () => {
   await getAnimalsById();
-  console.log(prevAnimal.value);
   isLoading.value = false;
 });
 </script>
@@ -280,5 +283,34 @@ ul.dog li::marker {
 
 ul.cat li::marker {
   content: "🐈 ";
+}
+
+.ribbon {
+  font-family: "Bellota", system-ui;
+  font-weight: bold;
+  color: #fff;
+  --f: 0.5em;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  line-height: 1.8;
+  padding-inline: 1lh;
+  padding-bottom: var(--f);
+  border-image: conic-gradient(#0008 0 0) 51% / var(--f);
+  clip-path: polygon(
+    100% calc(100% - var(--f)),
+    100% 100%,
+    calc(100% - var(--f)) calc(100% - var(--f)),
+    var(--f) calc(100% - var(--f)),
+    0 100%,
+    0 calc(100% - var(--f)),
+    999px calc(100% - var(--f) - 999px),
+    calc(100% - 999px) calc(100% - var(--f) - 999px)
+  );
+
+  transform: translate(calc((cos(45deg) - 1) * 100%), -100%) rotate(-45deg);
+  transform-origin: 100% 100%;
+  background-color: var(--red-color);
 }
 </style>

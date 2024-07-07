@@ -1,17 +1,14 @@
 <template>
-  <div
-    class="row gap-5 mx-0 gap-sm-0 justify-content-center justify-content-md-start"
-  >
+  <div class="row gap-5 mx-0 gap-sm-0 justify-content-center justify-content-sm-start">
     <div
-      class="animal-card-container col-6 my-sm-5 col-md-3 col-xl-2 d-flex justify-content-start"
+      class="animal-card-container col-6 my-sm-5 col-md-4 col-xl-2 d-flex justify-content-center"
       :style="{
-        opacity: route.path === '/home' ? 0 : 1,
-        transform:
-          route.path === '/home' ? 'translateY(200px)' : 'translateY(0)',
-        transition: route.path === '/home' ? 'all 0.7s ease-out' : 'none',
+        opacity: 0,
+        transform: 'translateY(100px)',
+        transition: 'all 0.7s ease',
       }"
       v-for="animal in animals"
-      :key="animal.microchip"
+      :key="animal.id"
     >
       <div
         class="position-relative animal-card d-flex align-items-center justify-content-center"
@@ -47,13 +44,13 @@
 
 <script setup>
 import { defineProps } from "vue";
-import { useRoute } from "vue-router";
+
 defineProps({
   animals: Array,
   animalType: String,
 });
 
-const route = useRoute();
+// const route = useRoute();
 </script>
 
 <style scoped>
@@ -91,6 +88,11 @@ const route = useRoute();
   -ms-transform: translate(-50%, -50%);
   text-align: center;
   z-index: 2;
+  overflow: hidden;
+}
+
+.animal-card-text p {
+  margin-bottom: 0.5rem;
 }
 
 .animal-card:hover .animal-card-text {

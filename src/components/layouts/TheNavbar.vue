@@ -5,7 +5,7 @@
         to="/home"
         class="navbar-brand"
         style="width: 150px; height: 70px; transform: translateY(-25px)"
-        ><img src="../../assets/logo5.png" alt="Bootstrap" class="img-fluid"
+        ><img src="../../assets/logo5.png" alt="pino-logo" class="img-fluid"
       /></router-link>
       <a
         class="navbar-toggler d-block d-md-none border-2"
