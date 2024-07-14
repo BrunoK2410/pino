@@ -21,9 +21,11 @@
           style="font-family: 'Bellota', system-ui"
         >
           <h2 class="card-title text-center">{{ article.title }}</h2>
-          <p class="card-text">
-            {{ article.text }}
-          </p>
+          <pre
+            class="card-text"
+            id="article-text"
+            style="text-wrap: wrap"
+          ></pre>
         </div>
         <div class="card-footer bg-red">
           <div class="row mt-4" data-masonry="{'percentPosition': true }">
@@ -80,10 +82,87 @@ const getArticlesById = async () => {
   }
 };
 
+const showText = () => {
+  const articleText = document.getElementById("article-text");
+  console.log(articleText);
+  const tempElement = document.createElement("div");
+  tempElement.innerHTML = article.value.text;
+
+  const processNode = (node, isFirstNode, isLastNode) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      let textNode = document.createTextNode(node.textContent);
+      const formattingTags = {
+        B: "STRONG",
+        I: "EM",
+      };
+      const parentNodes = [];
+      let parentNode = node.parentNode;
+      while (parentNode) {
+        if (formattingTags[parentNode.nodeName]) {
+          parentNodes.push(parentNode.nodeName);
+        }
+        parentNode = parentNode.parentNode;
+      }
+      if (parentNodes.length > 0) {
+        let formattedNode = textNode;
+        for (const tagName of parentNodes.reverse()) {
+          const wrapper = document.createElement(formattingTags[tagName]);
+          wrapper.appendChild(formattedNode);
+          formattedNode = wrapper;
+        }
+        if (isFirstNode) {
+          formattedNode.textContent = formattedNode.textContent.trimStart();
+        }
+        if (isLastNode) {
+          formattedNode.textContent = formattedNode.textContent.trimEnd();
+        }
+        articleText.appendChild(formattedNode);
+      } else {
+        const trimmedText = isFirstNode
+          ? textNode.textContent.trimStart()
+          : isLastNode
+          ? textNode.textContent.trimEnd()
+          : textNode.textContent;
+        articleText.appendChild(document.createTextNode(trimmedText));
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.nodeName === "A") {
+        const link = document.createElement("a");
+        link.href = node.getAttribute("href");
+        link.textContent = node.textContent;
+        link.target = "_blank";
+        link.style.textDecoration = "underline";
+        link.style.fontWeight = "bold";
+        articleText.appendChild(link);
+      } else if (node.nodeName === "BR") {
+        articleText.appendChild(document.createElement("br"));
+      } else {
+        const childNodes = node.childNodes;
+        for (let i = 0; i < childNodes.length; i++) {
+          const childNode = childNodes[i];
+          processNode(
+            childNode,
+            isFirstNode && i === 0,
+            isLastNode && i === childNodes.length - 1
+          );
+        }
+      }
+    }
+  };
+
+  const childNodes = tempElement.childNodes;
+  for (let i = 0; i < childNodes.length; i++) {
+    const childNode = childNodes[i];
+    processNode(childNode, i === 0, i === childNodes.length - 1);
+  }
+};
+
 onMounted(async () => {
   await getArticlesById();
   isLoading.value = false;
   nextTick(() => {
+    showText();
+
     const imgContainers = document.querySelectorAll("[data-masonry] div");
     console.log(imgContainers);
     imagesLoaded(imgContainers, () => {
