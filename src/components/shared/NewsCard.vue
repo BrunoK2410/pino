@@ -21,7 +21,7 @@
           {{ article.title }}
         </h5>
         <p class="card-text text-white mt-2">
-          {{ article.text }}
+          {{ strippedHTML(article.text) }}
         </p>
         <div class="d-flex justify-content-between align-items-center">
           <span class="text-white">{{ article.date }}</span>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, onMounted, nextTick } from "vue";
 defineProps({
   news: Array,
 });
@@ -95,12 +95,42 @@ const articleSlug = (article) => {
     .replace(/[?]/g, "")
     .replace(/\s+/g, "-")}${article.id}`;
 };
+
+const strippedHTML = (text) => {
+  return text.replace(/<[^>]+>/g, "");
+};
+
+const isSmallViewport = window.innerWidth < 362;
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("scroll-animation");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "50px" }
+);
+
+onMounted(() => {
+  nextTick(() => {
+    const newsCards = Array.from(document.querySelectorAll(".news-card"));
+    const itemsToAnimate = [...newsCards];
+    itemsToAnimate.forEach((element, index) => {
+      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+      observer.observe(element);
+    });
+  });
+});
 </script>
 
 <style scoped>
 .card-text {
   display: -webkit-box;
   -webkit-line-clamp: 4;
+  line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
