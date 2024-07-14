@@ -234,17 +234,6 @@ onMounted(async () => {
   }
 
   isLoading.value = false;
-  nextTick(() => {
-    const cards =
-      route.path !== "/news"
-        ? Array.from(document.querySelectorAll(".animal-card-container"))
-        : Array.from(document.querySelectorAll(".news-card"));
-
-    cards.forEach((element, index) => {
-      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
-      observer.observe(element);
-    });
-  });
 });
 </script>
 

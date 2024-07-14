@@ -373,7 +373,7 @@
 </template>
 
 <script setup>
-import { nextTick, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import apiRequests from "../services/apiRequests.js";
 import AnimalCard from "../components/shared/AnimalCard.vue";
@@ -411,40 +411,15 @@ const getNews = async () => {
 };
 
 const articleSlug = (article) => {
-  return `/news/${article.title.toLowerCase().replace(/[?]/g, "").replace(/\s+/g, "-")}${
-    article.id
-  }`;
+  return `/news/${article.title
+    .toLowerCase()
+    .replace(/[?]/g, "")
+    .replace(/\s+/g, "-")}${article.id}`;
 };
-
-const isSmallViewport = window.innerWidth < 362;
-
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("scroll-animation");
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "100px" }
-);
 
 onMounted(async () => {
   Promise.all([await getAnimals(), await getNews()]);
   isLoading.value = false;
-nextTick(() => {
-      const animalCards = Array.from(
-      document.querySelectorAll(".animal-card-container")
-    );
-    const newsCards = Array.from(document.querySelectorAll(".news-card"));
-
-    const itemsToAnimate = [...animalCards, ...newsCards];
-    itemsToAnimate.forEach((element, index) => {
-      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
-      observer.observe(element);
-    });
-  });
 });
 </script>
 
