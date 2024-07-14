@@ -1,5 +1,7 @@
 <template>
-  <div class="row gap-5 mx-0 gap-sm-0 justify-content-center justify-content-sm-start">
+  <div
+    class="row gap-5 mx-0 gap-sm-0 justify-content-center justify-content-sm-start"
+  >
     <div
       class="animal-card-container col-6 my-sm-5 col-md-4 col-xl-2 d-flex justify-content-center"
       :style="{
@@ -43,14 +45,39 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, onMounted, nextTick } from "vue";
 
 defineProps({
   animals: Array,
   animalType: String,
 });
 
-// const route = useRoute();
+const isSmallViewport = window.innerWidth < 362;
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("scroll-animation");
+        observer.unobserve(entry.target);
+      }
+    });
+  },
+  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "100px" }
+);
+
+onMounted(() => {
+  nextTick(() => {
+    const animalCards = Array.from(
+      document.querySelectorAll(".animal-card-container")
+    );
+
+    animalCards.forEach((element, index) => {
+      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+      observer.observe(element);
+    });
+  });
+});
 </script>
 
 <style scoped>
