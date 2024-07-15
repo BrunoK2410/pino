@@ -70,4 +70,8 @@ body a {
   height: 90px;
   max-height: 90px;
 }
+
+.fade-in {
+  opacity: 1 !important;
+}
 </style>
