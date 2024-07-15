@@ -1,7 +1,7 @@
 <template>
   <div class="row mx-0 gap-5 mt-5 justify-content-center">
     <div
-      v-for="article in news"
+      v-for="(article, index) in news"
       :key="article.id"
       class="news-card card col-12 border-0 px-0"
       style="max-width: 18rem"
@@ -12,7 +12,11 @@
       }"
     >
       <router-link :to="articleSlug(article)">
-        <img :src="article.images[0]" class="card-img-top" alt="..."
+        <img
+          :src="article.images[0]"
+          class="card-img-top"
+          alt="..."
+          @load="handleImageLoad(index)"
       /></router-link>
       <div
         class="card-body rounded-bottom d-flex flex-column justify-content-between bg-red"
@@ -84,10 +88,17 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, nextTick } from "vue";
-defineProps({
+import { defineProps, onMounted, nextTick, ref } from "vue";
+import imagesLoaded from "imagesloaded";
+const props = defineProps({
   news: Array,
 });
+
+const imageLoaded = ref(Array(props.news.length).fill(false));
+
+const handleImageLoad = (index) => {
+  imageLoaded.value[index] = true;
+};
 
 const articleSlug = (article) => {
   return `/news/${article.title
@@ -105,22 +116,26 @@ const isSmallViewport = window.innerWidth < 362;
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      const index = Array.from(entry.target.parentElement.children).indexOf(
+        entry.target
+      );
+      if (entry.isIntersecting && imageLoaded.value[index]) {
         entry.target.classList.add("scroll-animation");
         observer.unobserve(entry.target);
       }
     });
   },
-  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "50px" }
+  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "150px" }
 );
 
 onMounted(() => {
   nextTick(() => {
     const newsCards = Array.from(document.querySelectorAll(".news-card"));
-    const itemsToAnimate = [...newsCards];
-    itemsToAnimate.forEach((element, index) => {
-      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
-      observer.observe(element);
+    imagesLoaded(newsCards, () => {
+      newsCards.forEach((element, index) => {
+        element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+        observer.observe(element);
+      });
     });
   });
 });

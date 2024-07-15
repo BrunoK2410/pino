@@ -9,7 +9,7 @@
         transform: 'translateY(100px)',
         transition: 'all 0.7s ease',
       }"
-      v-for="animal in animals"
+      v-for="(animal, index) in animals"
       :key="animal.id"
     >
       <div
@@ -33,37 +33,48 @@
             class="img-fluid animal-image"
             alt="..."
             style="max-height: 150px; min-width: 200px"
+            @load="handleImageLoad(index)"
           />
           <div class="text position-absolute animal-card-text">
             <p>{{ animal.name }} ({{ animal.gender }})</p>
             <p>{{ animal.breed }}</p>
-          </div></router-link
-        >
+          </div>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, nextTick } from "vue";
+import { defineProps, ref, onMounted, nextTick } from "vue";
+import imagesLoaded from "imagesloaded";
 
-defineProps({
+const props = defineProps({
   animals: Array,
   animalType: String,
 });
+
+const imageLoaded = ref(Array(props.animals.length).fill(false));
+
+const handleImageLoad = (index) => {
+  imageLoaded.value[index] = true;
+};
 
 const isSmallViewport = window.innerWidth < 362;
 
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      const index = Array.from(entry.target.parentElement.children).indexOf(
+        entry.target
+      );
+      if (entry.isIntersecting && imageLoaded.value[index]) {
         entry.target.classList.add("scroll-animation");
         observer.unobserve(entry.target);
       }
     });
   },
-  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "100px" }
+  { rootMargin: isSmallViewport ? "0px 0px 0px 200px" : "150px" }
 );
 
 onMounted(() => {
@@ -71,10 +82,11 @@ onMounted(() => {
     const animalCards = Array.from(
       document.querySelectorAll(".animal-card-container")
     );
-
-    animalCards.forEach((element, index) => {
-      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
-      observer.observe(element);
+    imagesLoaded(animalCards, () => {
+      animalCards.forEach((element, index) => {
+        element.style.transitionDelay = `${0.2 * index * 0.3}s`;
+        observer.observe(element);
+      });
     });
   });
 });

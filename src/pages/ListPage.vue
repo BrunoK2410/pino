@@ -67,10 +67,15 @@
       <animal-card
         class="mt-5"
         v-if="route.path !== '/news'"
+        :key="filteredAnimals"
         :animals="filteredAnimals"
         :animalType="route.path === '/dogs' ? 'dog' : 'cat'"
       />
-      <news-card v-else :news="filteredNews" /><the-pagination
+      <news-card
+        v-else
+        :news="filteredNews"
+        :key="filteredNews"
+      /><the-pagination
         :currentPage="currentPage"
         :totalPages="totalPages"
         @decrement="prev"
@@ -82,7 +87,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, watch, nextTick } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import apiRequests from "../services/apiRequests.js";
 import AnimalCard from "../components/shared/AnimalCard.vue";
@@ -175,7 +180,6 @@ const scrollToTop = () => {
 const filteredAnimals = computed(() => {
   let filtered = [...adoptableAnimals.value];
   if (route.query.category) {
-    changeLoadingState(true);
     const category = route.query.category;
     filtered = animals.value.filter((animal) => {
       return animal.category.includes(category);
@@ -184,7 +188,6 @@ const filteredAnimals = computed(() => {
   getFilteredLength(filtered);
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
-  changeLoadingState(false);
 
   return filtered.slice(startIndex, endIndex);
 });
@@ -192,23 +195,9 @@ const filteredAnimals = computed(() => {
 const filteredNews = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
-  changeLoadingState();
+
   return news.value.slice(startIndex, endIndex);
 });
-
-const changeLoadingState = () => {
-  nextTick(() => {
-    const cards =
-      route.path !== "/news"
-        ? Array.from(document.querySelectorAll(".animal-card-container"))
-        : Array.from(document.querySelectorAll(".news-card"));
-
-    cards.forEach((element, index) => {
-      element.style.transitionDelay = `${0.2 * index * 0.3}s`;
-      observer.observe(element);
-    });
-  });
-};
 
 const getFilteredLength = (filtered) => {
   totalItems.value = [...filtered];

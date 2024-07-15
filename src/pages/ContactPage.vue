@@ -10,6 +10,7 @@
             src="../assets/background-image.jpg"
             class="img-fluid rounded-top"
             alt="..."
+            v-once
           />
         </div>
         <div class="col-12">
@@ -43,9 +44,7 @@
                   Dumovec
                 </h5>
                 <hr />
-                <h5 class="email position-relative m-0 ps-5">
-                  info@pino.hr
-                </h5>
+                <h5 class="email position-relative m-0 ps-5">info@pino.hr</h5>
                 <hr />
                 <div
                   class="donation-info position-relative d-flex flex-column justify-content-center ps-5"
