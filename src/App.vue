@@ -16,7 +16,7 @@ const route = useRoute();
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Bellota:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 :root {
   --red-color: #ec665d;
   --light-pink-color: #f4a39e;
