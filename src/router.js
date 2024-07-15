@@ -5,6 +5,7 @@ import ContactPage from "./pages/ContactPage.vue";
 import ListPage from "./pages/ListPage.vue";
 import AnimalDetailsPage from "./pages/AnimalDetailsPage.vue";
 import ArticleDetailsPage from "./pages/ArticleDetailsPage.vue";
+import NotFoundPage from "./pages/NotFoundPage.vue";
 
 const routes = [
   { path: "/", component: HomePage },
@@ -49,6 +50,7 @@ const routes = [
     name: "Article details",
     component: ArticleDetailsPage,
   },
+  { path: "/:notFound(.*)", component: NotFoundPage },
 ];
 
 const router = createRouter({
