@@ -64,13 +64,20 @@
       style="min-height: 90vh"
       class="position-relative d-flex flex-column justify-content-between"
     >
-      <animal-card
-        class="mt-5"
-        v-if="route.path !== '/news'"
-        :key="filteredAnimals"
-        :animals="filteredAnimals"
-        :animalType="route.path === '/dogs' ? 'dog' : 'cat'"
-      />
+      <template v-if="route.path !== '/news'"
+        ><h3
+          class="text-center text-white my-5"
+          v-if="filteredAnimals.length === 0"
+        >
+          Trenutno nema {{ route.name === "Dogs" ? "pasa" : "mačaka" }} u ovoj
+          kategoriji !
+        </h3>
+        <animal-card
+          class="mt-5"
+          :key="filteredAnimals"
+          :animals="filteredAnimals"
+          :animalType="route.path === '/dogs' ? 'dog' : 'cat'"
+      /></template>
       <news-card
         v-else
         :news="filteredNews"
