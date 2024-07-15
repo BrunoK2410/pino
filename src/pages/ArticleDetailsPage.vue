@@ -13,9 +13,18 @@
     </div>
   </div>
   <template v-else
-    ><div class="d-flex justify-content-center align-items-center px-2 pt-5">
+    ><div
+      class="d-flex justify-content-center align-items-center px-2 pt-5"
+      style="opacity: 0; transition: opacity 0.5s ease-in-out"
+      :class="{ 'fade-in': cardImageLoaded }"
+    >
       <div class="card mb-3 border-0" style="width: 800px">
-        <img :src="article.images[0]" class="card-img-top" alt="..." />
+        <img
+          :src="article.images[0]"
+          class="card-img-top"
+          alt="..."
+          @load="onCardImageLoad"
+        />
         <div
           class="card-body text-white bg-red"
           style="font-family: 'Bellota', system-ui"
@@ -71,7 +80,7 @@ const nextArticle = ref({});
 
 const getArticlesById = async () => {
   const id = route.params.slug.match(/-(.{19})$/);
-  console.log(id);
+
   try {
     const { currentArticle, prev, next } = await apiRequests.getNewsById(id[0]);
     article.value = currentArticle;
@@ -84,7 +93,7 @@ const getArticlesById = async () => {
 
 const showText = () => {
   const articleText = document.getElementById("article-text");
-  console.log(articleText);
+
   const tempElement = document.createElement("div");
   tempElement.innerHTML = article.value.text;
 
@@ -157,6 +166,12 @@ const showText = () => {
   }
 };
 
+const cardImageLoaded = ref(false);
+
+const onCardImageLoad = () => {
+  cardImageLoaded.value = true;
+};
+
 onMounted(async () => {
   await getArticlesById();
   isLoading.value = false;
@@ -164,7 +179,6 @@ onMounted(async () => {
     showText();
 
     const imgContainers = document.querySelectorAll("[data-masonry] div");
-    console.log(imgContainers);
     imagesLoaded(imgContainers, () => {
       const row = document.querySelector("[data-masonry]");
       if (row) {

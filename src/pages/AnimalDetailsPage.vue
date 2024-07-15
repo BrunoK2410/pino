@@ -81,7 +81,11 @@
       >
     </div>
 
-    <div class="d-flex justify-content-center align-items-center px-2 pt-5">
+    <div
+      class="d-flex justify-content-center align-items-center px-2 pt-5"
+      style="opacity: 0; transition: opacity 0.5s ease-in-out"
+      :class="{ 'fade-in': firstImageLoaded }"
+    >
       <div class="card mb-3 border-0" style="width: 800px">
         <div
           class="image-container d-flex justify-content-center align-items-center position-relative rounded-top"
@@ -101,7 +105,12 @@
                 :class="index === 0 ? 'active' : ''"
                 :key="index"
               >
-                <img :src="image" class="d-block w-100" alt="..." />
+                <img
+                  :src="image"
+                  class="d-block w-100"
+                  alt="..."
+                  @load="onFirstImageLoad"
+                />
               </div>
             </div>
             <button
@@ -242,6 +251,12 @@ const isDogsPath = computed(() => {
   return route.path.includes("dogs") ? true : false;
 });
 
+const firstImageLoaded = ref(false);
+
+const onFirstImageLoad = () => {
+  firstImageLoaded.value = true;
+};
+
 onMounted(async () => {
   await getAnimalsById();
   isLoading.value = false;
@@ -312,5 +327,9 @@ ul.cat li::marker {
   transform: translate(calc((cos(45deg) - 1) * 100%), -100%) rotate(-45deg);
   transform-origin: 100% 100%;
   background-color: var(--red-color);
+}
+
+.fade-in {
+  opacity: 1 !important;
 }
 </style>

@@ -2,7 +2,13 @@
   <div class="d-flex justify-content-center align-items-center p-3">
     <div
       class="card rounded-bottom-0"
-      style="border: 1px solid #000000; max-width: 1000px"
+      style="
+        border: 1px solid #000000;
+        max-width: 1000px;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      "
+      :class="{ 'fade-in': cardImageLoaded }"
     >
       <div class="row g-0">
         <div class="col-12">
@@ -10,7 +16,7 @@
             src="../assets/background-image.jpg"
             class="img-fluid rounded-top"
             alt="..."
-            v-once
+            @load="onCardImageLoad"
           />
         </div>
         <div class="col-12">
@@ -197,6 +203,12 @@ const sendEmail = () => {
         console.log(error.text);
       }
     );
+};
+
+const cardImageLoaded = ref(false);
+
+const onCardImageLoad = () => {
+  cardImageLoaded.value = true;
 };
 
 const setValidation = () => {
