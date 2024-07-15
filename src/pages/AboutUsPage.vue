@@ -9,11 +9,10 @@
     >
       <h2 class="mb-3">PINO hrvatska udruga zaštitnika životinja</h2>
       <p class="fs-4">
-        Pino je neprofitna, nevladina i nestranačka udruga službeno
-        registrirana 14.07.1993.g., upisana u Registar udruga Republike Hrvatske
-        pod brojem 00001275. Osnovna djelatnost Udruge je pomoć napuštenim
-        životinjama, te pomoć i potpora ljudima koji brinu o većem broju
-        životinja.
+        Pino je neprofitna, nevladina i nestranačka udruga službeno registrirana
+        14.07.1993.g., upisana u Registar udruga Republike Hrvatske pod brojem
+        00001275. Osnovna djelatnost Udruge je pomoć napuštenim životinjama, te
+        pomoć i potpora ljudima koji brinu o većem broju životinja.
       </p>
     </div>
     <div class="bg-image position-relative mb-1 animate">
@@ -67,14 +66,13 @@
       <p class="fs-4">
         Na izmaku snaga, potpuno iscrpljeni i u velikim financijskim teškoćama
         započeli smo medijsku kampanju pod pokroviteljstvom “Vjesnika” za
-        sakupljanje humanitarne pomoći za životinje iz udruge Pino. Odaziv je bio
-        veliki i građani grada Zagreba kao i drugih gradova pokazali su da
+        sakupljanje humanitarne pomoći za životinje iz udruge Pino. Odaziv je
+        bio veliki i građani grada Zagreba kao i drugih gradova pokazali su da
         zaista imaju veliko srce. Dobili smo pomoć u hrani, dekama, vojničkim
         krevetima, starim namještajem, lijekovima i starim papirom. Oglasilo se
         i Gradsko poglavarstvo i pozvalo nas da potpišemo Ugovor o primanju
         mjesečne dotacije. Konačno, 1997. godine, nakon 14 godina rada azila,
-        Pino dobiva ravnopravni status s druga dva Društva za zaštitu
-        životinja.
+        Pino dobiva ravnopravni status s druga dva Društva za zaštitu životinja.
       </p>
       <p class="fs-4">
         Na tisuće i tisuće pasa prošlo je kroz azil u Bukovačkoj. Veliki broj
@@ -84,14 +82,14 @@
       </p>
       <p class="fs-4">
         U siječnju 2001. godine, pritisnuti nalogom za iseljenje, Pino je
-        zatvorio svoja vrata na Bukovačkoj 220. Ugasio se jedini svjetionik
-        koji je posljednjih 18 godina osvjetljavao mračni put stradanja mnogim
+        zatvorio svoja vrata na Bukovačkoj 220. Ugasio se jedini svjetionik koji
+        je posljednjih 18 godina osvjetljavao mračni put stradanja mnogim
         napuštenim životinjama. Potopila se jedina splav na kojoj je spas od
         sigurne smrti pronašlo na tisuće i tisuće neželjenih životinja.
       </p>
       <p class="fs-4">
-        Teška srca iznevjerili smo one koji su u Pino dugi niz godina
-        imali sigurno utočište i topli dom pun ljubavi. Pse smo morali predati u
+        Teška srca iznevjerili smo one koji su u Pino dugi niz godina imali
+        sigurno utočište i topli dom pun ljubavi. Pse smo morali predati u
         novoizgrađeni gradski azil u Dumovcu. U početku je naš odlazak u gradski
         azil bio gotovo svakodnevan, posebice kako bi našim prisustvom
         štićenicima udruge Pino olakšali boravak u Dumovcu, koji je za njih
@@ -148,11 +146,11 @@
     >
       <h2 class="mb-3">Prihvatilište u Dumovcu</h2>
       <p class="fs-4 mb-0">
-        Od 1.travnja 2008. godine Pino je konačno, nakon 26 godina
-        podstanarstva i seljakanja svojih štićenika sa dvije ranije lokacije, a
-        zahvaljujući razumijevanju Grada koji nam je ustupio 3.000 m2 zemljišta
-        – ostvarila svoj san i zaplovila punim jedrima u Dumovcu, naselju
-        udaljenom cca 15 km od centra grada.
+        Od 1.travnja 2008. godine Pino je konačno, nakon 26 godina podstanarstva
+        i seljakanja svojih štićenika sa dvije ranije lokacije, a zahvaljujući
+        razumijevanju Grada koji nam je ustupio 3.000 m2 zemljišta – ostvarila
+        svoj san i zaplovila punim jedrima u Dumovcu, naselju udaljenom cca 15
+        km od centra grada.
       </p>
       <div
         class="d-flex flex-column flex-md-row justify-content-md-center align-items-center gap-5 py-4 w-100"
@@ -233,7 +231,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Bellota:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap");
 .bg-image {
   background-image: url("https://www.noina-arka.hr/wp-content/uploads/2010/07/Dumovec.jpg");
   background-repeat: no-repeat;
