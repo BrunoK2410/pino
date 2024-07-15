@@ -328,8 +328,4 @@ ul.cat li::marker {
   transform-origin: 100% 100%;
   background-color: var(--red-color);
 }
-
-.fade-in {
-  opacity: 1 !important;
-}
 </style>
