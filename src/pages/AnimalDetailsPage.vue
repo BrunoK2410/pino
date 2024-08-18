@@ -93,11 +93,7 @@
           <div class="ribbon fs-5">
             {{ animal.name }}
           </div>
-          <div
-            id="animalImages"
-            class="carousel slide bg-red"
-            data-bs-theme="dark"
-          >
+          <div id="animalImages" class="carousel slide bg-red">
             <div class="carousel-inner">
               <div
                 class="carousel-item"
