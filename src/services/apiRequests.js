@@ -66,7 +66,6 @@ class ApiRequests {
                 });
 
               const currentIndex = result.findIndex((item) => item.id === id);
-
               const prev = currentIndex > 0 ? result[currentIndex - 1] : null;
               const next =
                 currentIndex < result.length - 1

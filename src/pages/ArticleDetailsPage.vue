@@ -93,10 +93,8 @@ const getArticlesById = async () => {
 
 const showText = () => {
   const articleText = document.getElementById("article-text");
-
   const tempElement = document.createElement("div");
   tempElement.innerHTML = article.value.text;
-
   const processNode = (node, isFirstNode, isLastNode) => {
     if (node.nodeType === Node.TEXT_NODE) {
       let textNode = document.createTextNode(node.textContent);
@@ -177,7 +175,6 @@ onMounted(async () => {
   isLoading.value = false;
   nextTick(() => {
     showText();
-
     const imgContainers = document.querySelectorAll("[data-masonry] div");
     imagesLoaded(imgContainers, () => {
       const row = document.querySelector("[data-masonry]");
